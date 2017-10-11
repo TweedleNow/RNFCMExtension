@@ -1,0 +1,14 @@
+{
+  "name": "react-native-fcm-extension",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.40.0"
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evollu/react-native-fcm.git"
+  },
+  "scripts": {},
+  "version": "9.7.2"
+}
