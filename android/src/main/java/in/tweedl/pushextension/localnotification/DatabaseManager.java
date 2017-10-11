@@ -54,15 +54,6 @@ public class DatabaseManager {
         return 0;
     }
 
-    public void clearSpecificDB(Context context, int pushId) {
-        try {
-            DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(context).getPushData().deleteBuilder();
-            deleteBuilder.where().eq("id", pushId);
-            deleteBuilder.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public List<PushData> getNotificationList(Context context, String key) {
@@ -71,7 +62,7 @@ public class DatabaseManager {
             QueryBuilder<PushData, Integer> query = getHelper(context).getPushData().queryBuilder();
             query.where().eq("inboxStyleKey", key);
             query.limit(10L);
-            query.orderBy("timeStamp",false);
+            query.orderBy("timeStamp", false);
             catList = query.query();
 
         } catch (SQLException e) {
@@ -91,18 +82,28 @@ public class DatabaseManager {
     }
 
 
-    public  List<PushData> getNotificationList(Context context) {
+    public List<PushData> getNotificationList(Context context) {
         List<PushData> catList = null;
         try {
             QueryBuilder<PushData, Integer> query = getHelper(context).getPushData().queryBuilder();
             query.limit(10L);
-            query.orderBy("timeStamp",false);
+            query.orderBy("timeStamp", false);
             catList = query.query();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return catList;
+    }
+
+    public void deleteNotification(Context mContext, String notificationId) {
+        try {
+            DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(mContext).getPushData().deleteBuilder();
+            deleteBuilder.where().eq("id", notificationId);
+            deleteBuilder.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

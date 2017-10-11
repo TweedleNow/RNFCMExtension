@@ -13,17 +13,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import in.tweedl.pushextension.localnotification.DatabaseManager;
+
 public class FIRLocalMessagingHelper {
     private static final String TAG = FIRLocalMessagingHelper.class.getSimpleName();
     private final static String PREFERENCES_KEY = "ReactNativeSystemNotification";
     private static boolean mIsForeground = false; //this is a hack
-
+    DatabaseManager dm = new DatabaseManager();
     private Context mContext;
     private SharedPreferences sharedPreferences = null;
 
@@ -122,6 +123,7 @@ public class FIRLocalMessagingHelper {
     }
 
     public void removeDeliveredNotification(String notificationId){
+        dm.deleteNotification(mContext,notificationId);
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId.hashCode());
     }
