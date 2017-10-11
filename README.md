@@ -7,32 +7,35 @@ This Library Is an extension of [react-native-fcm](https://github.com/evollu/rea
 
 sample push notification object:
 ```diff
-{ "data": { "custom_notification":  {
-  	"sub_text": "555",
-  	"auto_cancel":true,
-  	"ongoing":false,
-  	"priority": "high",
-  	"lights":true,
-  	"number":10,
-  	"ticker": "My Notification Ticker",
-  	"tag": "some_tag",
-  	"body": "My Notification Message",
-  	"icon": "ic_launcher",
-  	"color": "red",
-  	"group": "group",
-  	"sound": "default",
-  	"title": "My Notification Title",
-  	"click_action": "ACTION",
-  	"vibrate":300,
-  	"local_notification":true,
-  	"big_text": "Show when notification is expanded",
-  	"show_in_foreground":true,
-  	"my_custom_data": "my_custom_field_value",
-  	"large_icon": "ic_launcher",
-  	"inboxStyleKey" : "chat70",
-    "id":"snfsjfklsjklfjssfsfs"
-  }},
-  "to" : "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
+{
+	"data": {
+		"custom_notification": {
+			"sub_text": "555",
+			"auto_cancel": true,
+			"ongoing": false,
+			"priority": "high",
+			"lights": true,
+			"number": 10,
+			"ticker": "My Notification Ticker",
+			"tag": "some_tag",
+			"body": "My Notification Message",
+			"icon": "ic_launcher",
+			"color": "red",
+			"group": "group",
+			"sound": "default",
+			"title": "My Notification Title",
+			"click_action": "ACTION",
+			"vibrate": 300,
+			"local_notification": true,
+			"big_text": "Show when notification is expanded",
+			"show_in_foreground": true,
+			"my_custom_data": "my_custom_field_value",
+			"large_icon": "ic_launcher",
+			"inboxStyleKey": "chat70",
+			"id": "snfsjfklsjklfjssfsfs"
+		}
+	},
+	"to": "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
 }
 ```
 ## IMPORTANT NOTE
