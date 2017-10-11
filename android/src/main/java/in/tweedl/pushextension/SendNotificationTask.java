@@ -115,7 +115,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             //icon
             String smallIcon = pd.getIcon();
             int smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
-            notification.setSmallIcon(smallIconResId);
+            notification.setSmallIcon(getNotificationIcon(smallIconResId));
+
+            
 
             //large icon
             String largeIcon = pd.getLarge_icon();
@@ -259,6 +261,12 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    private int getNotificationIcon(int smallIcon) {
+
+        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
+        return useWhiteIcon ? R.drawable.icon_silhouette : smallIcon;
     }
 
     private void removeSameTypeNotif(List<PushData> pdList, PushData pd) {
