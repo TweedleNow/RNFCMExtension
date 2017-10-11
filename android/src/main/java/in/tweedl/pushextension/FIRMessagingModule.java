@@ -245,7 +245,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
                             params.putString(key, data.get(key));
                         }
                     }
-                    Log.e(TAG,"sending notificaiton event to JS");
+                   // Log.e(TAG,"sending notificaiton event to JS");
                     sendEvent("FCMNotificationReceived", params);
 
                 }

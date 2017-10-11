@@ -290,7 +290,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         PushData pd = new PushData();
 
         try {
-            pd.setId(bundle.getString("id"));
+            pd.setId(bundle.getString("id") != null ? bundle.getString("id") : String.valueOf((int) System.currentTimeMillis()));
             pd.setTitle(bundle.getString("title"));
             pd.setBody(bundle.getString("body"));
             pd.setSound(bundle.getString("sound"));
