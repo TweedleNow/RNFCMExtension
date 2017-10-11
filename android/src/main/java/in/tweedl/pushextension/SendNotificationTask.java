@@ -50,7 +50,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
 
         PushData pd = getPushDataFromBundle(bundle);
-        //Log.e(TAG,"the push data is " + pd);
+     //   Log.e(TAG,"the push data is " + pd);
         if(pd == null)
             return null;
 
@@ -232,7 +232,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
 
-                int notificationID = (pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId();
+                int notificationID = ((pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId()).hashCode();
                 // giving size here to replace it
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
@@ -268,7 +268,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         for (int i = 0; i < pdList.size(); i++) {
             PushData pdListI = pdList.get(i);
             if (pd.getInboxStyleKey() != null && pd.getInboxStyleKey().equals(pdListI.getInboxStyleKey())) {
-                notificationManager.cancel(pdListI.getId());
+                notificationManager.cancel(pdListI.getId().hashCode());
 
                 // dm.clearSpecificDB(mContext,pdListI.getId());
             }
@@ -282,32 +282,30 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         PushData pd = new PushData();
 
         try {
-            long id = Long.valueOf(bundle.getString("id") != null && bundle.getString("id").isEmpty() ? bundle.getString("id") : String.valueOf(System.currentTimeMillis()));
-            pd.setId((int) id);
-            // pd.setId(bundle.getInt("id"));
+            pd.setId(bundle.getString("id"));
             pd.setTitle(bundle.getString("title"));
             pd.setBody(bundle.getString("body"));
             pd.setSound(bundle.getString("sound"));
             pd.setPriority(bundle.getString("priority"));
             pd.setClick_action(bundle.getString("click_action"));
-            pd.setBadge(Integer.valueOf(bundle.getString("badge", "0")));
-            pd.setNumber(Integer.valueOf(bundle.getString("number", "0")));
+            pd.setBadge(bundle.getInt("badge", 0));
+            pd.setNumber(bundle.getInt("number", 0));
             pd.setTicker(bundle.getString("ticker"));
-            pd.setAuto_cancel(Boolean.valueOf(bundle.getString("auto_cancel", "true")));
+            pd.setAuto_cancel(bundle.getBoolean("auto_cancel", true));
             pd.setLarge_icon(bundle.getString("large_icon"));
             pd.setIcon(bundle.getString("icon", "ic_launcher"));
             pd.setBig_text(bundle.getString("big_text"));
             pd.setSub_text(bundle.getString("sub_text"));
             pd.setColor(bundle.getString("color"));
-            pd.setVibrate(Integer.valueOf(bundle.getString("vibrate", "false")));
+            pd.setVibrate(bundle.getInt("vibrate", 100));
             pd.setTag(bundle.getString("tag"));
             pd.setGroup(bundle.getString("group"));
             pd.setPicture(bundle.getString("picture"));
-            pd.setOngoing(Boolean.valueOf(bundle.getString("ongoing", "false")));
+            pd.setOngoing(bundle.getBoolean("ongoing", false));
             pd.setMy_custom_data(bundle.getString("my_custom_data"));
-            pd.setLights(Boolean.valueOf(bundle.getString("lights", "false")));
-            pd.setShow_in_foreground(Boolean.valueOf(bundle.getString("show_in_foreground","true")));
-            pd.setInboxStyle(Boolean.valueOf(bundle.getString("inboxStyle", "true")));
+            pd.setLights(bundle.getBoolean("lights", false));
+            pd.setShow_in_foreground(bundle.getBoolean("show_in_foreground",true));
+            pd.setInboxStyle(bundle.getBoolean("inboxStyle", true));
             pd.setInboxStyleKey(bundle.getString("inboxStyleKey"));
             pd.setInboxStyleMessage(bundle.getString("inboxStyleMessage"));
             pd.setTimeStamp(System.currentTimeMillis());

@@ -13,7 +13,7 @@ public class PushData {
     @DatabaseField(columnName = "timeStamp")
     private long timeStamp;
     @DatabaseField(columnName = "id")
-    private Integer id;            // "UNIQ_ID_STRING",               // (optional for instant notification)
+    private String id;            // "UNIQ_ID_STRING",               // (optional for instant notification)
     @DatabaseField(columnName = "title")
     private String title;            // "My Notification Title",            // as FCM payload
     @DatabaseField(columnName = "body")
@@ -111,11 +111,11 @@ public class PushData {
     }
 
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
