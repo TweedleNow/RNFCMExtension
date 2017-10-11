@@ -50,12 +50,15 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
 
         PushData pd = getPushDataFromBundle(bundle);
+        //Log.e(TAG,"the push data is " + pd);
+        if(pd == null)
+            return null;
 
         dm.insertNotification(mContext, pd);
 
         List<PushData> pdList = new ArrayList<>();
-        if(pd.getInboxStyleKey() != null && !pd.getInboxStyleKey().isEmpty())
-              pdList =   dm.getNotificationList(mContext, pd.getInboxStyleKey());
+        if (pd.getInboxStyleKey() != null && !pd.getInboxStyleKey().isEmpty())
+            pdList = dm.getNotificationList(mContext, pd.getInboxStyleKey());
 
 
         try {
@@ -140,8 +143,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 //Log.i("myLog","show notification messge is::"+message.size()+"summary "+summary);
                 for (int i = 0; i < pdList.size(); i++) {
-                    if(title.length() > 20)
-                        title = pd.getTitle().substring(0,19) + "...";
+                    if (title.length() > 20)
+                        title = pd.getTitle().substring(0, 19) + "...";
                     inboxStyle.addLine(title + " : " + pd.getBody());
                 }
                 notification.setStyle(inboxStyle);
@@ -153,7 +156,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                     String picture = pd.getPicture();
                     if (picture != null) {
-                            NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
+                        NotificationCompat.BigPictureStyle bigPicture = new NotificationCompat.BigPictureStyle();
 
                         if (picture.startsWith("http://") || picture.startsWith("https://")) {
                             Bitmap bitmap = getBitmapFromURL(picture);
@@ -222,35 +225,35 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             }
 
 
-            //   if (!mIsForeground || pd.getShow_in_foreground()) {
-            Intent intent = new Intent();
-            intent.setClassName(mContext, intentClassName);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtras(bundle);
-            intent.setAction(pd.getClick_action());
+            if (!mIsForeground || pd.getShow_in_foreground()) {
+                Intent intent = new Intent();
+                intent.setClassName(mContext, intentClassName);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtras(bundle);
+                intent.setAction(pd.getClick_action());
 
-            int notificationID = (pdList != null && pdList.size() > 1) ? pdList.get(pdList.size()-1).getId() : pd.getId();
-            // giving size here to replace it
+                int notificationID = (pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId();
+                // giving size here to replace it
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
-            NotificationManager notificationManager =
-                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager notificationManager =
+                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-            notification.setContentIntent(pendingIntent);
+                notification.setContentIntent(pendingIntent);
 
-            Notification info = notification.build();
+                Notification info = notification.build();
 
-            if (pd.getTag() != null) {
-                String tag = pd.getTag();
-                notificationManager.notify(tag, notificationID, info);
+                if (pd.getTag() != null) {
+                    String tag = pd.getTag();
+                    notificationManager.notify(tag, notificationID, info);
 
-            } else {
-                notificationManager.notify(notificationID, info);
+                } else {
+                    notificationManager.notify(notificationID, info);
+                }
+
             }
-
-            //   }
 
 
         } catch (Exception e) {
@@ -275,40 +278,46 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
     private PushData getPushDataFromBundle(Bundle bundle) {
 
+
         PushData pd = new PushData();
 
-        long id = Long.valueOf(bundle.getString("id") != null && bundle.getString("id").isEmpty() ? bundle.getString("id"): String.valueOf(System.currentTimeMillis()));
-        pd.setId((int)id);
-        // pd.setId(bundle.getInt("id"));
-        pd.setTitle(bundle.getString("title"));
-        pd.setBody(bundle.getString("body"));
-        pd.setSound(bundle.getString("sound"));
-        pd.setPriority(bundle.getString("priority"));
-        pd.setClick_action(bundle.getString("click_action"));
-        pd.setBadge(Integer.valueOf(bundle.getString("badge","0")));
-        pd.setNumber(Integer.valueOf(bundle.getString("number","0")));
-        pd.setTicker(bundle.getString("ticker"));
-        pd.setAuto_cancel(Boolean.valueOf(bundle.getString("auto_cancel", "true")));
-        pd.setLarge_icon(bundle.getString("large_icon"));
-        pd.setIcon(bundle.getString("icon", "ic_launcher"));
-        pd.setBig_text(bundle.getString("big_text"));
-        pd.setSub_text(bundle.getString("sub_text"));
-        pd.setColor(bundle.getString("color"));
-        pd.setVibrate(Integer.valueOf(bundle.getString("vibrate","true")));
-        pd.setTag(bundle.getString("tag"));
-        pd.setGroup(bundle.getString("group"));
-        pd.setPicture(bundle.getString("picture"));
-        pd.setOngoing(Boolean.valueOf(bundle.getString("ongoing","true")));
-        pd.setMy_custom_data(bundle.getString("my_custom_data"));
-        pd.setLights(Boolean.valueOf(bundle.getString("lights","false")));
-        pd.setShow_in_foreground(Boolean.valueOf(bundle.getString("show_in_foreground")));
-        pd.setInboxStyle(Boolean.valueOf(bundle.getString("inboxStyle","true")));
-        pd.setInboxStyleKey(bundle.getString("inboxStyleKey"));
-        pd.setInboxStyleMessage(bundle.getString("inboxStyleMessage"));
-        pd.setTimeStamp(System.currentTimeMillis());
+        try {
+            long id = Long.valueOf(bundle.getString("id") != null && bundle.getString("id").isEmpty() ? bundle.getString("id") : String.valueOf(System.currentTimeMillis()));
+            pd.setId((int) id);
+            // pd.setId(bundle.getInt("id"));
+            pd.setTitle(bundle.getString("title"));
+            pd.setBody(bundle.getString("body"));
+            pd.setSound(bundle.getString("sound"));
+            pd.setPriority(bundle.getString("priority"));
+            pd.setClick_action(bundle.getString("click_action"));
+            pd.setBadge(Integer.valueOf(bundle.getString("badge", "0")));
+            pd.setNumber(Integer.valueOf(bundle.getString("number", "0")));
+            pd.setTicker(bundle.getString("ticker"));
+            pd.setAuto_cancel(Boolean.valueOf(bundle.getString("auto_cancel", "true")));
+            pd.setLarge_icon(bundle.getString("large_icon"));
+            pd.setIcon(bundle.getString("icon", "ic_launcher"));
+            pd.setBig_text(bundle.getString("big_text"));
+            pd.setSub_text(bundle.getString("sub_text"));
+            pd.setColor(bundle.getString("color"));
+            pd.setVibrate(Integer.valueOf(bundle.getString("vibrate", "false")));
+            pd.setTag(bundle.getString("tag"));
+            pd.setGroup(bundle.getString("group"));
+            pd.setPicture(bundle.getString("picture"));
+            pd.setOngoing(Boolean.valueOf(bundle.getString("ongoing", "false")));
+            pd.setMy_custom_data(bundle.getString("my_custom_data"));
+            pd.setLights(Boolean.valueOf(bundle.getString("lights", "false")));
+            pd.setShow_in_foreground(Boolean.valueOf(bundle.getString("show_in_foreground","true")));
+            pd.setInboxStyle(Boolean.valueOf(bundle.getString("inboxStyle", "true")));
+            pd.setInboxStyleKey(bundle.getString("inboxStyleKey"));
+            pd.setInboxStyleMessage(bundle.getString("inboxStyleMessage"));
+            pd.setTimeStamp(System.currentTimeMillis());
 
-
-
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
 
 
         return pd;

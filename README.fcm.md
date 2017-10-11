@@ -1,53 +1,19 @@
-
+[![Join the chat at https://gitter.im/evollu/react-native-fcm](https://badges.gitter.im/evollu/react-native-fcm.svg)](https://gitter.im/evollu/react-native-fcm?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## NOTES:
-This Library Is an extension of [react-native-fcm](https://github.com/evollu/react-native-fcm).
+- current latest version: v9.x
+- for iOS SDK < 4, use react-native-fcm@6.2.3 (v6.x is still compatible with Firebase SDK v4)
+- for RN < 0.40.0, use react-native-fcm@2.5.6
+- for RN < 0.33.0, use react-native-fcm@1.1.0
+- for RN < 0.30.0, use react-native-fcm@1.0.15
+- local notification is not only available in V1
 
+- An example working project is available at: https://github.com/evollu/react-native-fcm/tree/master/Examples/simple-fcm-client
 
+## Installation
 
-sample push notification object:
-{ "data":   {
-  	"sub_text": "555",
-  	"auto_cancel":"true",
-  	"ongoing":"true",
-  	"priority": "high",
-  	"lights":"true",
-  	"number":"10",
-  	"ticker": "My Notification Ticker",
-  	"id": "UNIQ_ID_STRING",
-  	"tag": "some_tag",
-  	"body": "My Notification Message",
-  	"icon": "ic_launcher",
-  	"color": "red",
-  	"group": "group",
-  	"sound": "default",
-  	"title": "My Notification Title",
-  	"click_action": "ACTION",
-  	"vibrate":"300",
-  	"local_notification":"true",
-  	"big_text": "Show when notification is expanded",
-  	"show_in_foreground":"true",
-  	"my_custom_data": "my_custom_field_value",
-  	"large_icon": "ic_launcher",
-  	"inboxStyleKey" : "chat3",
-    "inboxStyle" :"true",
-    "inboxStyleMessage" : "1"
-  },
-  "to" : "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
-}
-
-The code will automatically group the notification based upon the inbox style key.
-
-
-This code assume that you will pass a valid integer and boolean in case of ->badge, number,auto_cancel,vibrate,local_notification,show_in_foreground,ongoing,lights,inboxStyle.
-If the same is not passsed library will not show notification instead it will throw an exception.
-
-
-
-## Usage:
-- Run `npm install git+https://git@github.com/github.com/TweedleNow/RNFCMExtension.git --save`
-
-
+- Run `npm install react-native-fcm --save`
+- Run `react-native link react-native-fcm` (RN 0.29.1+, otherwise `rnpm link react-native-fcm`)
 
 ## Configure Firebase Console
 ### FCM config file
@@ -81,13 +47,13 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
     ...
     android:theme="@style/AppTheme">
 
-+   <service android:name="in.tweedl.pushextension.MessagingService" android:enabled="true" android:exported="true">
++   <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
 +     <intent-filter>
 +       <action android:name="com.google.firebase.MESSAGING_EVENT"/>
 +     </intent-filter>
 +   </service>
 
-+   <service android:name="in.tweedl.pushextension.InstanceIdService" android:exported="false">
++   <service android:name="com.evollu.react.fcm.InstanceIdService" android:exported="false">
 +     <intent-filter>
 +       <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 +     </intent-filter>
@@ -161,7 +127,7 @@ NOTE: Verify that react-native links correctly in `MainApplication.java`
 ```diff
 import android.app.application
 ...
-+import in.tweedl.pushextension.FIRMessagingPackage;
++import com.evollu.react.fcm.FIRMessagingPackage;
 ```
 ....
 ```diff
@@ -192,19 +158,6 @@ import android.app.application
 +       setIntent(intent);
 +   }       
 ```
-
-
-
-
-To Clear all push notification edit `MainActivity.java`:
-```diff
-
-+  DatabaseManager dm;
-+  dm = new DatabaseManager();
-+  dm.deleteTable(this);
-+  NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-+  notificationManager.cancelAll();
-
 
 Notes:
 - `@Override` is added to update intent on notification click
@@ -314,8 +267,8 @@ Edit AndroidManifest.xml
 + <uses-permission android:name="android.permission.VIBRATE" />
 
   <application
-+      <receiver android:name="in.tweedl.pushextension.FIRLocalMessagingPublisher"/>
-+      <receiver android:enabled="true" android:exported="true"  android:name="in.tweedl.pushextension.FIRSystemBootEventReceiver">
++      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
++      <receiver android:enabled="true" android:exported="true"  android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver">
 +          <intent-filter>
 +              <action android:name="android.intent.action.BOOT_COMPLETED"/>
 +              <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
@@ -325,7 +278,7 @@ Edit AndroidManifest.xml
 +      </receiver>
   </application>
 ```
-NOTE: `in.tweedl.pushextension.FIRLocalMessagingPublisher` is required for presenting local notifications. `in.tweedl.pushextension.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
+NOTE: `com.evollu.react.fcm.FIRLocalMessagingPublisher` is required for presenting local notifications. `com.evollu.react.fcm.FIRSystemBootEventReceiver` is required only if you need to schedule future or recurring local notifications
 
 
 ## Usage
@@ -642,7 +595,7 @@ check out [official docs and see if they support](https://firebase.google.com/do
 #### I want to add advanced feature that FCM doesn't support for remote notification
 You can either wait for FCM to develop it or you have to write native code to create notifications.
 - for iOS, you can do it in `didReceiveRemoteNotification` in `appDelegate.m`
-- for android, you can do it by implementing a service similar to "in.tweedl.pushextension.MessagingService"
+- for android, you can do it by implementing a service similar to "com.evollu.react.fcm.MessagingService"
 
 Or if you have a good way to wake up react native javascript thread please let me know, although I'm worring waking up the whole application is too expensive.
 
@@ -676,6 +629,3 @@ Issues and pull requests are welcome. Let's make this thing better!
 
 #### Credits
 Local notification implementation is inspired by react-native-push-notification by zo0r
-
-
-
