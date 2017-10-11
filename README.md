@@ -6,15 +6,14 @@ This Library Is an extension of [react-native-fcm](https://github.com/evollu/rea
 
 
 sample push notification object:
-{ "data":   {
+{ "data": { "custom_notification":  {
   	"sub_text": "555",
-  	"auto_cancel":"true",
-  	"ongoing":"true",
+  	"auto_cancel":true,
+  	"ongoing":false,
   	"priority": "high",
-  	"lights":"true",
-  	"number":"10",
+  	"lights":true,
+  	"number":10,
   	"ticker": "My Notification Ticker",
-  	"id": "UNIQ_ID_STRING",
   	"tag": "some_tag",
   	"body": "My Notification Message",
   	"icon": "ic_launcher",
@@ -23,26 +22,19 @@ sample push notification object:
   	"sound": "default",
   	"title": "My Notification Title",
   	"click_action": "ACTION",
-  	"vibrate":"300",
-  	"local_notification":"true",
+  	"vibrate":300,
+  	"local_notification":true,
   	"big_text": "Show when notification is expanded",
-  	"show_in_foreground":"true",
+  	"show_in_foreground":true,
   	"my_custom_data": "my_custom_field_value",
   	"large_icon": "ic_launcher",
-  	"inboxStyleKey" : "chat3",
-    "inboxStyle" :"true",
-    "inboxStyleMessage" : "1"
-  },
+  	"inboxStyleKey" : "chat70",
+    "id":"snfsjfklsjklfjssfsfs"
+  }},
   "to" : "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
 }
-
-The code will automatically group the notification based upon the inbox style key.
-
-
-This code assume that you will pass a valid integer and boolean in case of ->badge, number,auto_cancel,vibrate,local_notification,show_in_foreground,ongoing,lights,inboxStyle.
-If the same is not passsed library will not show notification instead it will throw an exception.
-
-
+## IMPORTANT NOTE
+The id of each and every notification has to be different otherwise the last notification will get replaced, if the inbox style key matches to all the last unread notifications and the new notification's id is different, The notification will group themselves in Inbox Style
 
 ## Usage:
 - Run `npm install git+https://git@github.com/github.com/TweedleNow/RNFCMExtension.git --save`
