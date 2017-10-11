@@ -6,6 +6,7 @@ This Library Is an extension of [react-native-fcm](https://github.com/evollu/rea
 
 
 sample push notification object:
+```diff
 { "data": { "custom_notification":  {
   	"sub_text": "555",
   	"auto_cancel":true,
@@ -33,6 +34,7 @@ sample push notification object:
   }},
   "to" : "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
 }
+```
 ## IMPORTANT NOTE
 The id of each and every notification has to be different otherwise the last notification will get replaced, if the inbox style key matches to all the last unread notifications and the new notification's id is different, The notification will group themselves in Inbox Style
 
