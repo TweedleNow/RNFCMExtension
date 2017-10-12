@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.webkit.URLUtil;
 
 import java.io.IOException;
@@ -50,8 +51,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
 
         PushData pd = getPushDataFromBundle(bundle);
-     //   Log.e(TAG,"the push data is " + pd);
-        if(pd == null)
+        //   Log.e(TAG,"the push data is " + pd);
+        if (pd == null)
             return null;
 
         dm.insertNotification(mContext, pd);
@@ -117,7 +118,6 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             int smallIconResId = res.getIdentifier(smallIcon, "mipmap", packageName);
             notification.setSmallIcon(getNotificationIcon(smallIconResId));
 
-            
 
             //large icon
             String largeIcon = pd.getLarge_icon();
@@ -265,8 +265,17 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
     private int getNotificationIcon(int smallIcon) {
 
+        Resources res = mContext.getResources();
+        String packageName = mContext.getPackageName();
+
+        String silhoutte = "icon_silhouette";
+        int silhoutteId = res.getIdentifier(silhoutte, "drawable", packageName);
+
+        if (silhoutteId == 0)
+            Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
+
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? R.drawable.icon_silhouette : smallIcon;
+        return useWhiteIcon && silhoutteId != 0 ? silhoutteId : smallIcon;
     }
 
     private void removeSameTypeNotif(List<PushData> pdList, PushData pd) {
@@ -312,15 +321,13 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             pd.setOngoing(bundle.getBoolean("ongoing", false));
             pd.setMy_custom_data(bundle.getString("my_custom_data"));
             pd.setLights(bundle.getBoolean("lights", false));
-            pd.setShow_in_foreground(bundle.getBoolean("show_in_foreground",true));
+            pd.setShow_in_foreground(bundle.getBoolean("show_in_foreground", true));
             pd.setInboxStyle(bundle.getBoolean("inboxStyle", true));
             pd.setInboxStyleKey(bundle.getString("inboxStyleKey"));
             pd.setInboxStyleMessage(bundle.getString("inboxStyleMessage"));
             pd.setTimeStamp(System.currentTimeMillis());
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
