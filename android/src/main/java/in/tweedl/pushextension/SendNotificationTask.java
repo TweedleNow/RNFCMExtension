@@ -51,7 +51,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
 
         PushData pd = getPushDataFromBundle(bundle);
-        //   Log.e(TAG,"the push data is " + pd);
+        // Log.e(TAG, "the push data is " + pd);
         if (pd == null)
             return null;
 
@@ -61,6 +61,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         if (pd.getInboxStyleKey() != null && !pd.getInboxStyleKey().isEmpty())
             pdList = dm.getNotificationList(mContext, pd.getInboxStyleKey());
 
+        // Log.e(TAG, "the push list is " + pdList);
 
         try {
             String intentClassName = getMainActivityClassName();
@@ -141,13 +142,19 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             if (pdList != null && pdList.size() > 1) {
 
                 // todo remove existing push notifications for the same key as we are now grouping them
-                removeSameTypeNotif(pdList, pd);
+                // removeSameTypeNotif(pdList, pd);
+
+//                NotificationManager notificationManager =
+//                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//                notificationManager.cancel(pd.getId().hashCode());
+//                Log.e(TAG,"removing the notification with id " + pd.getId().hashCode());
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 //Log.i("myLog","show notification messge is::"+message.size()+"summary "+summary);
                 for (int i = 0; i < pdList.size(); i++) {
+                    title = pdList.get(i).getTitle();
                     if (title.length() > 20)
-                        title = pd.getTitle().substring(0, 19) + "...";
-                    inboxStyle.addLine(title + " : " + pd.getBody());
+                        title = title.substring(0, 19) + "...";
+                    inboxStyle.addLine(title + " : " + pdList.get(i).getBody());
                 }
                 notification.setStyle(inboxStyle);
             } else {
@@ -247,14 +254,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
                 Notification info = notification.build();
 
-                if (pd.getTag() != null) {
-                    String tag = pd.getTag();
-                    notificationManager.notify(tag, notificationID, info);
-
-                } else {
-                    notificationManager.notify(notificationID, info);
-                }
-
+                notificationManager.notify(notificationID, info);
+               // Log.e(TAG, "Giving current notification id -> " + notificationID);
             }
 
 
@@ -272,7 +273,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         int silhoutteId = res.getIdentifier(silhoutte, "drawable", packageName);
 
         if (silhoutteId == 0)
-            Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
+          //  Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
 
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon && silhoutteId != 0 ? silhoutteId : smallIcon;
@@ -286,6 +287,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             PushData pdListI = pdList.get(i);
             if (pd.getInboxStyleKey() != null && pd.getInboxStyleKey().equals(pdListI.getInboxStyleKey())) {
                 notificationManager.cancel(pdListI.getId().hashCode());
+                Log.e(TAG, "the notification id is I am removing is  " + pdListI.getId().hashCode());
 
                 // dm.clearSpecificDB(mContext,pdListI.getId());
             }
