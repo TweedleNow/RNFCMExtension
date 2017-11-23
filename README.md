@@ -96,7 +96,7 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
 - Edit `{YOUR_MAIN_PROJECT}/app/build.gradle`:
 ```diff
  dependencies {
-+    compile project(':react-native-fcm')
++    compile project(':tweedl-fcm')
 +    compile 'com.google.firebase:firebase-core:10.0.1' //this decides your firebase SDK version
      compile fileTree(dir: "libs", include: ["*.jar"])
      compile "com.android.support:appcompat-v7:23.0.1"
@@ -106,8 +106,8 @@ https://firebase.google.com/docs/cloud-messaging/ios/certs
 - Edit `android/settings.gradle`
 ```diff
   ...
-+ include ':react-native-fcm'
-+ project(':react-native-fcm').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fcm/android')
++ include ':tweedl-fcm'
++ project(':tweedl-fcm').projectDir = new File(rootProject.projectDir, '../node_modules/tweedl-fcm/android')
   include ':app'
 ```
 
@@ -136,7 +136,7 @@ Notes:
 - you if want to handle `click_action` you need to add custom intent-filter, check native android documentation
 
 
-If you are using RN < 0.30.0 and react-native-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
+If you are using RN < 0.30.0 and tweedl-fcm < 1.0.16, pass intent into package, edit `MainActivity.java`:
 
 - RN 0.28:
 
@@ -663,7 +663,7 @@ NOTE: this flag doesn't work for Android push notification, use `custom_notifica
 No. Method swizzling in Firebase Cloud Messaging handles this unless you turn that off. Then you are on your own to implement the handling. Check this link https://firebase.google.com/docs/cloud-messaging/ios/client
 
 #### I want to add actions in iOS notification
-Check this https://github.com/evollu/react-native-fcm/issues/325
+Check this https://github.com/evollu/tweedl-fcm/issues/325
 
 #### React/RCTBridgeModule.h not found
 This is mostly caused by React Native upgrade. Here is a fix http://stackoverflow.com/questions/41477241/react-native-xcode-upgrade-and-now-rctconvert-h-not-found
