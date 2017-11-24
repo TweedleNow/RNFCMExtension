@@ -1,5 +1,6 @@
 package in.tweedl.pushextension;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,8 +18,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.webkit.URLUtil;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,11 +52,36 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         this.dm = new DatabaseManager();
     }
 
+
+    public static class NotificationActionService extends IntentService {
+        public NotificationActionService() {
+            super(NotificationActionService.class.getSimpleName());
+        }
+
+        @Override
+        protected void onHandleIntent(Intent intent) {
+            Log.e(TAG, "handle notification");
+            PushData pd = new Gson().fromJson(intent.getStringExtra("pd"), PushData.class);
+            pd.setOpened_from_tray(true);
+            Log.e(TAG, "the push data is " + pd.toString());
+            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG, "Refreshed token: " + refreshedToken);
+
+            // Broadcast refreshed token
+
+            Intent i = new Intent("sparshgr8.in.pushextension.ClickPushOpenApp");
+            Bundle bundle = new Bundle();
+            bundle.putString("pd", pd.toString());
+            i.putExtras(bundle);
+            sendBroadcast(i);
+
+        }
+    }
+
     protected Void doInBackground(Void... params) {
 
-
         PushData pd = getPushDataFromBundle(bundle);
-        // Log.e(TAG, "the push data is " + pd);
+         Log.e(TAG, "the push data is " + pd);
         if (pd == null)
             return null;
 
@@ -232,16 +262,30 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             if (pd.isLights() != null && pd.isLights()) {
                 notification.setDefaults(NotificationCompat.DEFAULT_LIGHTS);
             }
+            int notificationID = ((pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId()).hashCode();
 
+            Log.e(TAG, "the app is in foreground " + mIsForeground);
+            if (mIsForeground) {
+                Intent intent = new Intent(mContext, NotificationActionService.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtras(bundle);
+                intent.setAction(pd.getClick_action());
+                intent.putExtra("pd", pd.toString());
+                PendingIntent pendingIntent = PendingIntent.getService(mContext, notificationID, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if (!mIsForeground || pd.getShow_in_foreground()) {
+                NotificationManager notificationManager =
+                        (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                notification.setContentIntent(pendingIntent);
+                Notification info = notification.build();
+                notificationManager.notify(notificationID, info);
+            } else if (pd.getShow_in_foreground()) {
                 Intent intent = new Intent();
                 intent.setClassName(mContext, intentClassName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
 
-                int notificationID = ((pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId()).hashCode();
                 // giving size here to replace it
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, notificationID, intent,
@@ -255,7 +299,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 Notification info = notification.build();
 
                 notificationManager.notify(notificationID, info);
-               // Log.e(TAG, "Giving current notification id -> " + notificationID);
+                // Log.e(TAG, "Giving current notification id -> " + notificationID);
             }
 
 
@@ -273,8 +317,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         int silhoutteId = res.getIdentifier(silhoutte, "drawable", packageName);
 
         if (silhoutteId == 0)
-          //  Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
-
+            Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon && silhoutteId != 0 ? silhoutteId : smallIcon;
     }
@@ -328,6 +371,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             pd.setInboxStyleKey(bundle.getString("inboxStyleKey"));
             pd.setInboxStyleMessage(bundle.getString("inboxStyleMessage"));
             pd.setTimeStamp(System.currentTimeMillis());
+            pd.setRouteName(bundle.getString("routeName"));
 
         } catch (Exception e) {
             e.printStackTrace();

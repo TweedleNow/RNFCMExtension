@@ -47,6 +47,7 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
         registerTokenRefreshHandler();
         registerMessageHandler();
         registerLocalMessageHandler();
+        appOpenClickHandler();
     }
     
     @Override
@@ -252,6 +253,21 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
             }
         }, intentFilter);
     }
+
+    private void appOpenClickHandler() {
+        IntentFilter intentFilter = new IntentFilter("sparshgr8.in.pushextension.ClickPushOpenApp");
+
+        getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (getReactApplicationContext().hasActiveCatalystInstance()) {
+                    Log.e(TAG,"emitting event .... ");
+                    sendEvent("FCMNotificationRouteChanged", Arguments.fromBundle(intent.getExtras()));
+                }
+            }
+        }, intentFilter);
+    }
+
 
     private void registerLocalMessageHandler() {
         IntentFilter intentFilter = new IntentFilter("sparshgr8.in.pushextension.ReceiveLocalNotification");

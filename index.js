@@ -5,6 +5,7 @@ const EventEmitter = new NativeEventEmitter(NativeModules.RNFIRMessaging || {});
 export const FCMEvent = {
   RefreshToken: 'FCMTokenRefreshed',
   Notification: 'FCMNotificationReceived',
+  NotificationRoute :'FCMNotificationRouteChanged',
   DirectChannelConnectionChanged: 'FCMDirectChannelConnectionChanged'
 };
 

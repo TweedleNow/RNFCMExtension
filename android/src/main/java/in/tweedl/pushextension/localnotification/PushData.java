@@ -64,6 +64,10 @@ public class PushData {
     private String inboxStyleMessage;
     @DatabaseField(columnName = "inboxStyleKey")
     private String inboxStyleKey;
+    private boolean opened_from_tray;
+    private String routeName;
+    public PushData() {
+    }
 
 
     public Boolean isAuto_cancel() {
@@ -288,6 +292,24 @@ public class PushData {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+
+
+    public boolean isOpened_from_tray() {
+        return opened_from_tray;
+    }
+
+    public void setOpened_from_tray(boolean opened_from_tray) {
+        this.opened_from_tray = opened_from_tray;
+    }
+
+    public String getRouteName() {
+        return routeName;
+    }
+
+    public void setRouteName(String routeName) {
+        this.routeName = routeName;
     }
 
 
