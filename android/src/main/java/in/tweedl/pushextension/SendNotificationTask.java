@@ -273,7 +273,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         int silhoutteId = res.getIdentifier(silhoutte, "drawable", packageName);
 
         if (silhoutteId == 0)
-          //  Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
+            Log.e(TAG, "Siloutte icon is not present, launcher will be used instead!!");
 
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon && silhoutteId != 0 ? silhoutteId : smallIcon;
