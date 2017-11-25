@@ -5,7 +5,7 @@ const EventEmitter = new NativeEventEmitter(NativeModules.RNFIRMessaging || {});
 export const FCMEvent = {
   RefreshToken: 'FCMTokenRefreshed',
   Notification: 'FCMNotificationReceived',
-  NotificationRoute :'FCMNotificationRouteChanged',
+  NotificationRoute: 'FCMNotificationRouteChanged',
   DirectChannelConnectionChanged: 'FCMDirectChannelConnectionChanged'
 };
 
@@ -49,7 +49,7 @@ FCM.getFCMToken = () => {
   return RNFIRMessaging.getFCMToken();
 };
 
-FCM.deleteInstanceId = () =>{
+FCM.deleteInstanceId = () => {
   return RNFIRMessaging.deleteInstanceId();
 };
 
@@ -69,7 +69,7 @@ FCM.presentLocalNotification = (details) => {
   RNFIRMessaging.presentLocalNotification(details);
 };
 
-FCM.scheduleLocalNotification = function(details) {
+FCM.scheduleLocalNotification = function (details) {
   if (!details.id) {
     throw new Error('id is required for scheduled notification');
   }
@@ -77,7 +77,7 @@ FCM.scheduleLocalNotification = function(details) {
   RNFIRMessaging.scheduleLocalNotification(details);
 };
 
-FCM.getScheduledLocalNotifications = function() {
+FCM.getScheduledLocalNotifications = function () {
   return RNFIRMessaging.getScheduledLocalNotifications();
 };
 
@@ -86,6 +86,12 @@ FCM.cancelLocalNotification = (notificationID) => {
     return;
   }
   RNFIRMessaging.cancelLocalNotification(notificationID);
+};
+
+
+FCM.setSuppressId = (suppressId) => {
+  if (Platform.OS == 'android')
+    RNFIRMessaging.setSuppressId(suppressId);
 };
 
 FCM.cancelAllLocalNotifications = () => {
@@ -147,7 +153,7 @@ FCM.on = (event, callback) => {
   };
 
   if (event === FCMEvent.Notification) {
-    return EventEmitter.addListener(event, async(data) => {
+    return EventEmitter.addListener(event, async (data) => {
       data.finish = finish;
       try {
         await callback(data);

@@ -26,6 +26,7 @@ public class FIRLocalMessagingHelper {
     private static boolean mIsForeground = false; //this is a hack
     DatabaseManager dm = new DatabaseManager();
     private Context mContext;
+    private static String mSuppressId; // this is second hack
     private SharedPreferences sharedPreferences = null;
 
     public FIRLocalMessagingHelper(Application context) {
@@ -44,9 +45,12 @@ public class FIRLocalMessagingHelper {
         return (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }
 
+    // to do is to add the supress id
     public void sendNotification(Bundle bundle) {
-        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle).execute();
+        Log.e("foooooooo", " sending the suppress id to send notification task " + mSuppressId);
+        new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle, mSuppressId).execute();
     }
+
 
     public void sendNotificationScheduled(Bundle bundle) {
         String intentClassName = getMainActivityClassName();
@@ -55,7 +59,7 @@ public class FIRLocalMessagingHelper {
         }
 
         String notificationId = bundle.getString("id");
-        if(notificationId == null){
+        if (notificationId == null) {
             Log.e(TAG, "failed to schedule notification because id is missing");
             return;
         }
@@ -72,25 +76,25 @@ public class FIRLocalMessagingHelper {
 
         Long interval = null;
         switch (bundle.getString("repeat_interval", "")) {
-          case "minute":
-              interval = (long) 60000;
-              break;
-          case "hour":
-              interval = AlarmManager.INTERVAL_HOUR;
-              break;
-          case "day":
-              interval = AlarmManager.INTERVAL_DAY;
-              break;
-          case "week":
-              interval = AlarmManager.INTERVAL_DAY * 7;
-              break;
+            case "minute":
+                interval = (long) 60000;
+                break;
+            case "hour":
+                interval = AlarmManager.INTERVAL_HOUR;
+                break;
+            case "day":
+                interval = AlarmManager.INTERVAL_DAY;
+                break;
+            case "week":
+                interval = AlarmManager.INTERVAL_DAY * 7;
+                break;
         }
 
-        if(interval != null){
+        if (interval != null) {
             getAlarmManager().setRepeating(AlarmManager.RTC_WAKEUP, fireDate, interval, pendingIntent);
-        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getAlarmManager().setExact(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
-        }else {
+        } else {
             getAlarmManager().set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
         }
 
@@ -115,20 +119,20 @@ public class FIRLocalMessagingHelper {
     public void cancelAllLocalNotifications() {
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
+        for (java.util.Map.Entry<String, ?> entry : keyMap.entrySet()) {
             cancelAlarm(entry.getKey());
         }
         editor.clear();
         editor.apply();
     }
 
-    public void removeDeliveredNotification(String notificationId){
-        dm.deleteNotification(mContext,notificationId);
+    public void removeDeliveredNotification(String notificationId) {
+        dm.deleteNotification(mContext, notificationId);
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId.hashCode());
     }
 
-    public void removeAllDeliveredNotifications(){
+    public void removeAllDeliveredNotifications() {
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }
@@ -139,12 +143,12 @@ public class FIRLocalMessagingHelper {
         getAlarmManager().cancel(pendingIntent);
     }
 
-    public ArrayList<Bundle> getScheduledLocalNotifications(){
+    public ArrayList<Bundle> getScheduledLocalNotifications() {
         ArrayList<Bundle> array = new ArrayList<Bundle>();
         java.util.Map<String, ?> keyMap = sharedPreferences.getAll();
-        for(java.util.Map.Entry<String, ?> entry:keyMap.entrySet()){
+        for (java.util.Map.Entry<String, ?> entry : keyMap.entrySet()) {
             try {
-                JSONObject json = new JSONObject((String)entry.getValue());
+                JSONObject json = new JSONObject((String) entry.getValue());
                 Bundle bundle = BundleJSONConverter.convertToBundle(json);
                 array.add(bundle);
             } catch (JSONException e) {
@@ -154,7 +158,12 @@ public class FIRLocalMessagingHelper {
         return array;
     }
 
-    public void setApplicationForeground(boolean foreground){
+    public void setApplicationForeground(boolean foreground) {
         mIsForeground = foreground;
+    }
+
+    public void setSuppressId(String suppressId) {
+        Log.e("fooooooooo", "the suppress id in FIR Local messaging helper is " + suppressId);
+        mSuppressId = suppressId;
     }
 }

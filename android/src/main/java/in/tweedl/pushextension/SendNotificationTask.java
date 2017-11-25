@@ -25,7 +25,6 @@ import android.webkit.URLUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -44,13 +43,15 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     private Bundle bundle;
     private SharedPreferences sharedPreferences;
     private Boolean mIsForeground;
+    private String suppressId = "";
 
-    public SendNotificationTask(Context context, SharedPreferences sharedPreferences, Boolean mIsForeground, Bundle bundle) {
+    public SendNotificationTask(Context context, SharedPreferences sharedPreferences, Boolean mIsForeground, Bundle bundle, String suppressId) {
         this.mContext = context;
         this.bundle = bundle;
         this.sharedPreferences = sharedPreferences;
         this.mIsForeground = mIsForeground;
         this.dm = new DatabaseManager();
+        this.suppressId = suppressId;
     }
 
 
@@ -82,7 +83,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         PushData pd = getPushDataFromBundle(bundle);
-         Log.e(TAG, "the push data is " + pd);
+        Log.e(TAG, "the push data is " + pd);
         if (pd == null)
             return null;
 
@@ -267,6 +268,13 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 
             Log.e(TAG, "the app is in foreground " + mIsForeground);
             if (mIsForeground) {
+                Log.e("foooooooo", "the suppress id in send notification task is " + suppressId);
+
+                if (suppressId != null && !suppressId.isEmpty()) {
+                    //check if the id is same as group id if it is simply return
+                    if (suppressId.equalsIgnoreCase(pd.getGroup()))
+                        return null;
+                }
                 Intent intent = new Intent(mContext, NotificationActionService.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtras(bundle);
@@ -280,6 +288,8 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 notification.setContentIntent(pendingIntent);
                 Notification info = notification.build();
                 notificationManager.notify(notificationID, info);
+
+
             } else if (pd.getShow_in_foreground()) {
                 Intent intent = new Intent();
                 intent.setClassName(mContext, intentClassName);

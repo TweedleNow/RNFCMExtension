@@ -88,6 +88,7 @@ public class MessagingService extends FirebaseMessagingService {
                 Bundle bundle = BundleJSONConverter.convertToBundle(new JSONObject(customNotification));
                 FIRLocalMessagingHelper helper = new FIRLocalMessagingHelper(this.getApplication());
                 helper.sendNotification(bundle);
+                Log.e("foooooooo", "3");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
