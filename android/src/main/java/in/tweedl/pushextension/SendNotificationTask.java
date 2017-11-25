@@ -181,6 +181,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
 //                notificationManager.cancel(pd.getId().hashCode());
 //                Log.e(TAG,"removing the notification with id " + pd.getId().hashCode());
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+                int titleRes = res.getIdentifier("app_name","string",packageName);
+                // for this to work ideally there should be a res defice in either xml or gradle file
+                notification.setContentTitle(titleRes == 0 ? title: mContext.getString(titleRes));
                 //Log.i("myLog","show notification messge is::"+message.size()+"summary "+summary);
                 for (int i = 0; i < pdList.size(); i++) {
                     title = pdList.get(i).getTitle();
