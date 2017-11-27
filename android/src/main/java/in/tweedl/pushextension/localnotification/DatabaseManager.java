@@ -61,7 +61,6 @@ public class DatabaseManager {
         try {
             QueryBuilder<PushData, Integer> query = getHelper(context).getPushData().queryBuilder();
             query.where().eq("inboxStyleKey", key);
-            query.limit(10L);
             query.orderBy("timeStamp", false);
             catList = query.query();
 
