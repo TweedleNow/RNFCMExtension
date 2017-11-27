@@ -7,36 +7,33 @@ This Library Is an extension of [react-native-fcm](https://github.com/evollu/rea
 
 sample push notification object:
 ```diff
-{
-	"data": {
-		"custom_notification": {
-			"sub_text": "555",
-			"auto_cancel": true,
-			"ongoing": false,
-			"priority": "high",
-			"lights": true,
-			"number": 10,
-			"ticker": "My Notification Ticker",
-			"tag": "some_tag",
-			"body": "My Notification Message",
-			"icon": "ic_launcher",
-			"color": "red",
-			"group": "group",
-			"sound": "default",
-			"title": "My Notification Title",
-			"click_action": "ACTION",
-			"vibrate": 300,
-			"local_notification": true,
-			"big_text": "Show when notification is expanded",
-			"show_in_foreground": true,
-			"my_custom_data": "my_custom_field_value",
-			"large_icon": "ic_launcher",
-			"inboxStyleKey": "chat70",
-			"id": "snfsjfklsjklfjssfsfs"
-		}
-	},
-	"to": "c19LH7apdMA:APA91bHpeYcYGk-yGkPp3SOIcrOgdn_pR0TEvB6DpExR7tpaT7kjI8aqyl6RhqcCfykmHu6NXsY_Z_SJ6r6nuKxx_ZyunbczOUo79GSc72lcs7-5mD1rDj-T42t1MDplWTfK74hcfAcb"
-}
+ {
+ 	"notification": {},
+ 	"data": {
+ 		"custom_notification": {
+ 			"color" : "#fff000",
+ 			"title": "title of task 4",
+ 			"body": "iOS Device User has completed task title of task",
+ 			"sound": "default",
+ 			"tag": "fa0f560f-5687-4918-af18-0fa994c0f7e2",
+ 			"id": "fa0f560f-5687-4918-af18-0fa994c0fsdfsdf6",
+ 			"contentAvailable": true,
+ 			"lights": true,
+ 			"show_in_foreground": true,
+ 			"priority": "high",
+ 			"big_text": "iOS Device User has completed task title of task",
+ 			"sub_text": "Task",
+ 			"group": "5AADHHJJPddeeeffijnnorsuuw",
+ 			"inboxStyleKey": "task",
+ 			"routeName" : "tasks/list",
+ 			"foldedText": "you have {{n}} messsages"
+ 			
+ 		}
+ 	},
+ 	"time_to_live": 2419200,
+ 	"content_available": true,
+ 	"registration_ids": ["eAeZbVF6u6I:APA91bGwqtWVbWbS-G0YIqtv7W081fGbqJMKNs1TTOOZewvI-fFUpq-i8_FbOquYy0Zv5Z03Wyv8n-HkGIhfmV3T0x1zUXE8wAidLO4IAred55lG7KUZFyxOdCBkdYGxbh06rJZB03r6"]
+ }
 ```
 ## IMPORTANT NOTE
 The id of each and every notification has to be different otherwise the last notification will get replaced, if the inbox style key matches to all the last unread notifications and the new notification's id is different, The notification will group themselves in Inbox Style

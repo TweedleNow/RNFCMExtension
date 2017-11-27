@@ -66,6 +66,7 @@ public class PushData {
     private String inboxStyleKey;
     private boolean opened_from_tray;
     private String routeName;
+    private String foldedText;
     public PushData() {
     }
 
@@ -310,6 +311,14 @@ public class PushData {
 
     public void setRouteName(String routeName) {
         this.routeName = routeName;
+    }
+
+    public String getFoldedText() {
+        return foldedText;
+    }
+
+    public void setFoldedText(String foldedText) {
+        this.foldedText = foldedText;
     }
 
 
