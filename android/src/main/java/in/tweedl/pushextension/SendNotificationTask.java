@@ -187,7 +187,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 if (pd.getFoldedText() != null && !pd.getFoldedText().isEmpty())
                     notification.setContentText(pd.getFoldedText().replace("{{n}}", String.valueOf(pdList.size())));
                 //Log.i("myLog","show notification messge is::"+message.size()+"summary "+summary);
-                for (int i = 0; i < pdList.size(); i++) {
+                for (int i = 0; i < (pdList.size() > 9 ? 9 : pdList.size()); i++) {
                     title = pdList.get(i).getTitle();
                     if (title.length() > 20)
                         title = title.substring(0, 19) + "...";
