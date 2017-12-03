@@ -19,8 +19,9 @@ import java.util.Map;
 public class MessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MessagingService";
-
+    
     @Override
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "Remote message received");
         Intent i = new Intent("sparshgr8.in.pushextension.ReceiveNotification");
         i.putExtra("data", remoteMessage);
