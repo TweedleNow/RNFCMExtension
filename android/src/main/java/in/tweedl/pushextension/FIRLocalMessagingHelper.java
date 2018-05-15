@@ -133,6 +133,7 @@ public class FIRLocalMessagingHelper {
     }
 
     public void removeAllDeliveredNotifications() {
+        dm.deleteTable(mContext);
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }
