@@ -5,6 +5,7 @@ package in.tweedl.pushextension.localnotification;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -72,6 +73,7 @@ public class DatabaseManager {
 
     public int deleteTable(Context context) {
         try {
+            Log.e("fooooooo", "deleting the table");
             DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(context).getPushData().deleteBuilder();
             return deleteBuilder.delete();
         } catch (Exception e) {

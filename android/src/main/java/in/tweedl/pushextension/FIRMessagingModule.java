@@ -97,6 +97,17 @@ public class FIRMessagingModule extends ReactContextBaseJavaModule implements Li
     }
 
     @ReactMethod
+    public void getInboxKeyCount(String inboxStyleKey, Promise promise) {
+       Log.e("foooooooooooo 0","the key is "  + inboxStyleKey);
+        try {
+            promise.resolve(mFIRLocalMessagingHelper.getInboxKeyCount(inboxStyleKey));
+        } catch (Throwable e) {
+            e.printStackTrace();
+            promise.reject(null, e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void deleteInstanceId(Promise promise) {
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();

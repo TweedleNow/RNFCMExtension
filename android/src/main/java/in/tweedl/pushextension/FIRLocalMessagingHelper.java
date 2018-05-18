@@ -51,6 +51,10 @@ public class FIRLocalMessagingHelper {
         new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle, mSuppressId).execute();
     }
 
+    public String getInboxKeyCount(String inboxStyleKey)
+    {   Log.e("foooooooooooo 1","the key is "  + inboxStyleKey + "the size is " + dm.getNotificationList(mContext, inboxStyleKey).size());
+        return String.valueOf(dm.getNotificationList(mContext, inboxStyleKey).size());
+    }
 
     public void sendNotificationScheduled(Bundle bundle) {
         String intentClassName = getMainActivityClassName();
