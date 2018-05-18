@@ -47,12 +47,12 @@ public class FIRLocalMessagingHelper {
 
     // to do is to add the supress id
     public void sendNotification(Bundle bundle) {
-        Log.e("foooooooo", " sending the suppress id to send notification task " + mSuppressId);
+       // Log.e("foooooooo", " sending the suppress id to send notification task " + mSuppressId);
         new SendNotificationTask(mContext, sharedPreferences, mIsForeground, bundle, mSuppressId).execute();
     }
 
     public String getInboxKeyCount(String inboxStyleKey)
-    {   Log.e("foooooooooooo 1","the key is "  + inboxStyleKey + "the size is " + dm.getNotificationList(mContext, inboxStyleKey).size());
+    {  // Log.e("foooooooooooo 1","the key is "  + inboxStyleKey + "the size is " + dm.getNotificationList(mContext, inboxStyleKey).size());
         return String.valueOf(dm.getNotificationList(mContext, inboxStyleKey).size());
     }
 

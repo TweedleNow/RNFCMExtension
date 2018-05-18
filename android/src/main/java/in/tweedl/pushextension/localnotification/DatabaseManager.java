@@ -73,7 +73,7 @@ public class DatabaseManager {
 
     public int deleteTable(Context context) {
         try {
-            Log.e("fooooooo", "deleting the table");
+           // Log.e("fooooooo", "deleting the table");
             DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(context).getPushData().deleteBuilder();
             return deleteBuilder.delete();
         } catch (Exception e) {
