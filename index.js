@@ -49,6 +49,10 @@ FCM.getFCMToken = () => {
   return RNFIRMessaging.getFCMToken();
 };
 
+FCM.getInboxKeyCount = (key) => {
+  return RNFIRMessaging.getInboxKeyCount(key);
+};
+
 FCM.deleteInstanceId = () => {
   return RNFIRMessaging.deleteInstanceId();
 };
