@@ -299,6 +299,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 Intent intent = new Intent();
                 intent.setClassName(mContext, intentClassName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("pd",pd.toString());
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
 
