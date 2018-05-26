@@ -282,9 +282,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 }
                 Intent intent = new Intent(mContext, NotificationActionService.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                bundle.putString("pd",pd.toString());
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
-                intent.putExtra("pd", pd.toString());
                 PendingIntent pendingIntent = PendingIntent.getService(mContext, notificationID, intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
