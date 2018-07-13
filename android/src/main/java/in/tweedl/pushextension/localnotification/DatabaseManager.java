@@ -56,7 +56,6 @@ public class DatabaseManager {
     }
 
 
-
     public List<PushData> getNotificationList(Context context, String key) {
         List<PushData> catList = null;
         try {
@@ -73,7 +72,7 @@ public class DatabaseManager {
 
     public int deleteTable(Context context) {
         try {
-           // Log.e("fooooooo", "deleting the table");
+            // Log.e("fooooooo", "deleting the table");
             DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(context).getPushData().deleteBuilder();
             return deleteBuilder.delete();
         } catch (Exception e) {
@@ -82,6 +81,19 @@ public class DatabaseManager {
         return -1;
     }
 
+
+    public PushData getNotification(Context context, String id) {
+        List<PushData> catList = null;
+        try {
+            QueryBuilder qb = getHelper(context).getPushData().queryBuilder();
+            qb.where().eq("id", id);
+            catList = qb.query();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return catList.size() > 0 ? catList.get(0) : null;
+    }
 
     public List<PushData> getNotificationList(Context context) {
         List<PushData> catList = null;
@@ -101,6 +113,16 @@ public class DatabaseManager {
         try {
             DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(mContext).getPushData().deleteBuilder();
             deleteBuilder.where().eq("id", notificationId);
+            deleteBuilder.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteIboxStyle(Context mContext, String inboxStyle) {
+        try {
+            DeleteBuilder<PushData, Integer> deleteBuilder = getHelper(mContext).getPushData().deleteBuilder();
+            deleteBuilder.where().eq("inboxStyleKey", inboxStyle);
             deleteBuilder.delete();
         } catch (Exception e) {
             e.printStackTrace();

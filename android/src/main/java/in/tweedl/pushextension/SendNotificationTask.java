@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.tweedl.pushextension.localnotification.DatabaseManager;
+import in.tweedl.pushextension.localnotification.GetNotificationDismissEvent;
 import in.tweedl.pushextension.localnotification.PushData;
 
 public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
@@ -120,6 +121,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                     .setTicker(pd.getTicker())
                     .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                     .setAutoCancel(pd.isAuto_cancel())
+                    .setDeleteIntent(createOnDismissedIntent(mContext, pd.getInboxStyleKey(), pd.getId().hashCode()))
                     .setNumber(pd.getNumber())
                     .setSubText(pd.getSub_text())
                     .setGroup(pd.getGroup())
@@ -271,9 +273,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
             }
             int notificationID = ((pdList != null && pdList.size() > 1) ? pdList.get(pdList.size() - 1).getId() : pd.getId()).hashCode();
 
+
             Log.e(TAG, "the app is in foreground " + mIsForeground);
             if (mIsForeground) {
-                Log.e("foooooooo", "the suppress id in send notification task is " + suppressId);
 
                 if (suppressId != null && !suppressId.isEmpty()) {
                     //check if the id is same as group id if it is simply return
@@ -282,9 +284,9 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 }
                 Intent intent = new Intent(mContext, NotificationActionService.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                bundle.putString("pd", pd.toString());
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
-                intent.putExtra("pd", pd.toString());
                 PendingIntent pendingIntent = PendingIntent.getService(mContext, notificationID, intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -299,6 +301,7 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
                 Intent intent = new Intent();
                 intent.setClassName(mContext, intentClassName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("pd", pd.toString());
                 intent.putExtras(bundle);
                 intent.setAction(pd.getClick_action());
 
@@ -418,5 +421,15 @@ public class SendNotificationTask extends AsyncTask<Void, Void, Void> {
         Intent launchIntent = mContext.getPackageManager().getLaunchIntentForPackage(packageName);
         String className = launchIntent.getComponent().getClassName();
         return className;
+    }
+
+    private PendingIntent createOnDismissedIntent(Context context, String inboxStyleKey, int notificationId) {
+        Intent intent = new Intent(context, GetNotificationDismissEvent.class);
+        intent.putExtra("myNotificationId", inboxStyleKey);
+        Log.e("foooooo", "the notification id is " + inboxStyleKey);
+        PendingIntent pendingIntent =
+                PendingIntent.getBroadcast(context.getApplicationContext(), notificationId
+                        , intent, 0);
+        return pendingIntent;
     }
 }
